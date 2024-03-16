@@ -20,7 +20,6 @@ public class MeadowApp : App<F7CoreComputeV2>
     public override async Task Initialize()
     {
         var reset = Device.CreateDigitalOutputPort(Device.Pins.D02, true);
-        var handshake = Device.CreateDigitalInputPort(Device.Pins.D03, ResistorMode.Disabled);
         var chipSelect = Device.CreateDigitalOutputPort(Device.Pins.D14, true);
 
         var config = new SpiClockConfiguration(
@@ -30,7 +29,7 @@ public class MeadowApp : App<F7CoreComputeV2>
         var spiBus = Device.CreateSpiBus(Device.Pins.SPI5_SCK, Device.Pins.SPI5_COPI, Device.Pins.SPI5_CIPO, config);
 
         Console.WriteLine("Initializing GPU");
-        var gpuCommunication = new MeadowSpiGpuCommunication(spiBus, handshake, reset, chipSelect);
+        var gpuCommunication = new MeadowSpiGpuCommunication(spiBus, reset, chipSelect);
         var layerManager = new LayerManager();
         var profiler = new Profiler();
         var renderer = await MicrogpuRenderer.CreateAsync(gpuCommunication, layerManager, profiler, MeadowOS.FileSystem.UserFileSystemRoot, 2);

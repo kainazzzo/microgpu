@@ -32,7 +32,7 @@ namespace Microgpu.Meadow.Scratchpad
                 config);
 
             Console.WriteLine("Initializing GPU");
-            var gpuCommunication = new MeadowSpiGpuCommunication(spiBus, handshake, reset, chipSelect);
+            var gpuCommunication = new MeadowSpiGpuCommunication(spiBus, reset, chipSelect);
             _gpu = await Gpu.CreateAsync(gpuCommunication);
             await _gpu.InitializeAsync(1);
 

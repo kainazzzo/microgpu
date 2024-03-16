@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Glade2d.Graphics;
 using Glade2d.Profiling;
-using Meadow.Foundation;
+using Meadow;
 using Microgpu.Common;
 using Microgpu.Common.Comms;
 using Microgpu.Common.Operations;
@@ -46,7 +46,7 @@ public class MicrogpuRenderer : IRenderer
         {
             throw new InvalidOperationException("GPU not initialized");
         }
-       
+
         var textureManager = new TextureManager(contentRoot ?? Environment.CurrentDirectory, gpu);
         return new MicrogpuRenderer(gpu, textureManager, layerManager, profiler);
     }
@@ -66,7 +66,7 @@ public class MicrogpuRenderer : IRenderer
         _profiler.StartTiming("Microgpu.ApplyTextureChanges");
         await _textureManager.ApplyTextureChanges();
         _profiler.StopTiming("Microgpu.ApplyTextureChanges");
-        
+
         // Clear the screen
         await _gpu.SendFireAndForgetAsync(new DrawRectangleOperation<ColorRgb565>
         {
@@ -77,7 +77,7 @@ public class MicrogpuRenderer : IRenderer
             Height = (ushort)Height,
             Color = BackgroundColor.ToColorRgb565(),
         });
-       
+
         _profiler.StartTiming("Microgpu.BackgroundLayers");
         var backgroundLayerEnumerator = _layerManager.BackgroundLayerEnumerator();
         while (backgroundLayerEnumerator.MoveNext())
@@ -111,7 +111,7 @@ public class MicrogpuRenderer : IRenderer
                 TargetStartX = (short)sprite.X,
                 TargetStartY = (short)sprite.Y,
             };
-            
+
             var wasAdded = _activeBatch.AddOperation(operation);
             if (!wasAdded)
             {
@@ -138,7 +138,7 @@ public class MicrogpuRenderer : IRenderer
             }
         }
         _profiler.StopTiming("Microgpu.ForegroundLayers");
-        
+
         await _gpu.SendFireAndForgetAsync(new PresentFramebufferOperation());
     }
 

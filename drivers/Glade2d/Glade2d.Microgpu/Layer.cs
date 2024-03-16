@@ -4,7 +4,7 @@ using System.Numerics;
 using System.Threading.Tasks;
 using Glade2d.Graphics;
 using Glade2d.Services;
-using Meadow.Foundation;
+using Meadow;
 using Meadow.Foundation.Graphics;
 using Meadow.Foundation.Graphics.Buffers;
 using Microgpu.Common;

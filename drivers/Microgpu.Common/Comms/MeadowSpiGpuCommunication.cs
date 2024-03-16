@@ -8,19 +8,16 @@ namespace Microgpu.Common.Comms;
 public class MeadowSpiGpuCommunication : IGpuCommunication
 {
     private readonly IDigitalOutputPort _chipSelectPin;
-    private readonly IDigitalInputPort _handshakePin;
     private readonly byte[] _readLengthBuffer = new byte[2];
     private readonly IDigitalOutputPort _resetPin;
     private readonly ISpiBus _spiBus;
 
     public MeadowSpiGpuCommunication(
         ISpiBus spiBus,
-        IDigitalInputPort handshakePin,
         IDigitalOutputPort resetPin,
         IDigitalOutputPort chipSelectPin)
     {
         _spiBus = spiBus;
-        _handshakePin = handshakePin;
         _resetPin = resetPin;
         _chipSelectPin = chipSelectPin;
     }
@@ -63,13 +60,6 @@ public class MeadowSpiGpuCommunication : IGpuCommunication
 
     private async Task WaitForHandshakeAsync()
     {
-        var startedAt = DateTime.Now;
-        while (!_handshakePin.State)
-        {
-            if (DateTime.Now - startedAt > TimeSpan.FromSeconds(5))
-                throw new TimeoutException("Timeout waiting for SPI handshake");
-
-            await Task.Yield();
-        }
+        await Task.Delay(1000);
     }
 }
